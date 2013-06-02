@@ -9,7 +9,7 @@ var express = require('express')
   , path = require('path');
 
 var settings = require('./settings');
-var MongoStore = require('connect-mongodb');
+var MongoStore = require('connect-mongo')(express);
 
 
 var app = express();

@@ -9,6 +9,6 @@
     "express": "3.2.4",
     "ejs": "*",
     "mongodb": ">= 0.9.9",
-    "connect-mongodb": ">= 0.1.7"
+    "connect-mongo": ">= 0.1.7"
   }
 }
