@@ -32,3 +32,13 @@ body {
     </div>
   </div>
   <div id="container" class="container">
+    <% if (success && success.length) { %>
+      <div class="alert alert-success">
+        <%= success %>
+      </div>
+    <% } %>
+    <% if (error && error.length) { %>
+      <div class="alert alert-error">
+        <%= error %>
+      </div>
+    <% } %>
