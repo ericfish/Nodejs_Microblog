@@ -9,6 +9,7 @@ var express = require('express')
   , path = require('path')
   , settings = require('./settings')
   , MongoStore = require('connect-mongo')(express)
+  , partials = require('express-partials')
   , flash = require('connect-flash');
 
 var app = express();
@@ -22,6 +23,7 @@ app.configure(function(){
   app.set('view engine', 'ejs');
 
   //加载子模板文件
+  app.use(partials());
   app.use(flash());
   app.use(express.favicon());
   app.use(express.logger('dev'));
@@ -49,14 +51,15 @@ app.configure(function(){
 });
 
 // development only
-if ('development' == app.get('env')) {
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-}
+app.configure('development', function(){
+    app.use(express.errorHandler({ dumpExceptions: true, showStack: true}));
+});
 
 // production only
-if ('production' == app.get('env')) {
-  app.use(express.errorHandler());
-}
+app.configure('production', function(){
+    app.use(express.errorHandler());
+});
+
 
 routes(app);
 
