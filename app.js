@@ -35,9 +35,7 @@ app.configure(function(){
   app.use(express.session({
     secret: settings.cookieSecret,
     store: new MongoStore({
-      db: settings.db,
-      username: 'test_user',
-      password: '1q2w3e4r',
+      db: settings.db
     })
   }));
 
