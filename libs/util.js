@@ -1,3 +1,4 @@
+var settings = require('../settings');
 
 /**
  * authenticate mengodb
@@ -6,7 +7,7 @@
  * @returns
  */
 exports.authenticateAndGo = function authenticateAndGo(db, callback) {
-  db.authenticate('test_user', '1q2w3e4r', function(err) {
+  db.authenticate(settings.username, settings.password, function(err) {
     if (err) {
       console.log(err);
       return;

@@ -36,8 +36,8 @@ app.configure(function(){
     secret: settings.cookieSecret,
     store: new MongoStore({
       db: settings.db,
-      username: 'test_user',
-      password: '1q2w3e4r',
+      username: settings.username,
+      password: settings.password,
     })
   }));
 
