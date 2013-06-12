@@ -1,4 +1,5 @@
 var mongodb = require('./db');
+var util = require('../libs/util');
 
 function User(user) {
   this.name = user.name;
@@ -16,18 +17,22 @@ User.prototype.save = function save(callback) {
     if (err) {
       return callback(err);
     }
-    // 讀取 users 集合
-    db.collection('users', function(err, collection) {
-      if (err) {
-        mongodb.close();
-        return callback(err);
-      }
-      // 爲 name 屬性添加索引
-      collection.ensureIndex('name', {unique: true});
-      // 寫入 user 文檔
-      collection.insert(user, {safe: true}, function(err, user) {
-        mongodb.close();
-        callback(err, user);
+
+    // 验证用户名和密码
+    util.authenticateAndGo(db, function() {
+      // 讀取 users 集合
+      db.collection('users', function(err, collection) {
+        if (err) {
+          mongodb.close();
+          return callback(err);
+        }
+        // 爲 name 屬性添加索引
+        collection.ensureIndex('name', {unique: true});
+        // 寫入 user 文檔
+        collection.insert(user, {safe: true}, function(err, user) {
+          mongodb.close();
+          callback(err, user);
+        });
       });
     });
   });
@@ -38,22 +43,25 @@ User.get = function get(username, callback) {
     if (err) {
       return callback(err);
     }
-    // 讀取 users 集合
-    db.collection('users', function(err, collection) {
-      if (err) {
-        mongodb.close();
-        return callback(err);
-      }
-      // 查找 name 屬性爲 username 的文檔
-      collection.findOne({name: username}, function(err, doc) {
-        mongodb.close();
-        if (doc) {
-          // 封裝文檔爲 User 對象
-          var user = new User(doc);
-          callback(err, user);
-        } else {
-          callback(err, null);
+    // 验证用户名和密码
+    util.authenticateAndGo(db, function() {
+      // 讀取 users 集合
+      db.collection('users', function(err, collection) {
+        if (err) {
+          mongodb.close();
+          return callback(err);
         }
+        // 查找 name 屬性爲 username 的文檔
+        collection.findOne({name: username}, function(err, doc) {
+          mongodb.close();
+          if (doc) {
+            // 封裝文檔爲 User 對象
+            var user = new User(doc);
+            callback(err, user);
+          } else {
+            callback(err, null);
+          }
+        });
       });
     });
   });
